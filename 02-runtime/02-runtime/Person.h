@@ -10,6 +10,8 @@
 
 @interface Person : NSObject
 
++ (void)say:(NSString *)str;
+
 - (void)run:(int)no;
 - (void)eat;
 

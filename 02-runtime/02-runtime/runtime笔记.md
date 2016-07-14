@@ -1,4 +1,6 @@
 # runtime笔记
+比较好的资料：[南峰子的技术博客](http://southpeak.github.io/blog/2014/11/03/objective-c-runtime-yun-xing-shi-zhi-san-:fang-fa-yu-xiao-xi-zhuan-fa/)
+
 
 ## 一、runtime简介
  - runTime简称运行时。OC就是`运行时机制`，也就是在运行时候的一些机制，其中最主要的是消息机制。
@@ -85,4 +87,120 @@
 		首先，编译器将代码`[p eat];`转化为`objc_msgSend(p, @selector(eat));`，在`objc_msgSend`函数中。首先通过p的`isa`指针找到p对应的Class。在Class中先去cache中 通过SEL查找对应函数method（猜测cache中method列表是以SEL为key通过hash表来存储的，这样能提高函数查找速度），若 cache中未找到。再去methodList中查找，若methodlist中未找到，则取superClass中查找。若能找到，则将method加入到cache中，以方便下次查找，并通过method中的函数指针跳转到对应的函数中去执行。
 		
 	- 个人补充，通过这一些过程的学习我们可以发现，为什么在有些博客或者学习视频中强调如果能用类方法还是使用类方法，因为如果不是cache中存储的经常调用的方法，那么在调用的时候需要去methodList中寻找方法，首先obj的Class指向的是一个静态Class，存储的是类相关的，然后静态Class内部又有一个Class指针指向一个普通的Class存储的是对象相关的	
+	
+### 2.交换方法的实现方式
+
+  - 开发使用场景:系统自带的方法功能不够，给系统自带的方法扩展一些功能，并且保持原有的功能。
+  	 - 方式一:继承系统的类，重写方法.
+ 	 - 方式二:使用runtime,交换方法. 
+
+
+  	```objc
+	@implementation UIImage (Image)
+	// 加载分类到内存的时候调用
+	+ (void)load
+	{
+	    // 交换方法
+	    
+	    // 获取imageWithName方法地址
+	    Method imageWithName = class_getClassMethod(self, @selector(imageWithName:));
+	    
+	    // 获取imageWithName方法地址
+	    Method imageName = class_getClassMethod(self, @selector(imageNamed:));
+	
+	    // 交换方法地址，相当于交换实现方式
+	    method_exchangeImplementations(imageWithName, imageName);
+	    
+	    
+	}
+	
+	// 既能加载图片又能打印
+	+ (instancetype)imageWithName:(NSString *)name
+	{
+	   
+	    // 这里调用imageWithName，相当于调用imageName
+	    UIImage *image = [self imageWithName:name];
+	    
+	    if (image == nil) {
+	        NSLog(@"加载空的图片");
+	    }
+	    
+	    return image;
+	}
+	@end
+	```
+	
+- 原理解析	
+
+	* 交换之前：
+	![](Snip20151013_2.png)
+
+	* 交换之后：
+	![](Snip20151013_3.png) 
+	
+### 3.动态添加方法（消息转发机制的一种）
+	
+* 开发使用场景：如果一个类方法非常多，加载类到内存的时候也比较耗费资源，需要给每个方法生成映射表，可以使用动态给某个类，添加方法解决。 
+* 经典面试题：有没有使用performSelector，其实主要想问你有没有动态添加过方法。
+* 简单使用
+
+	- 添加对象方法
+	
+	```objc
+	// 调用未实现的对象方法
+	[[Person alloc] performSelector:@selector(say:) withObject:@"hello"];
+	
+	// 调用未实现的类方法
+	[Person say:@"1111"];
+	
+	#mark 在Person.m文件中：
+	
+	void say(id self, SEL _cmd, id param1)
+	{
+	    NSLog(@"%@ %@ %@", self, NSStringFromSelector(_cmd), param1);
+	}
+	
+	// OC中默认一个方法都有两个参数,self,_cmd,隐式参数
+	// self:方法调用者
+	// _cmd:调用方法的编号
+	
+	// 动态添加方法,首先实现这个resolveInstanceMethod
+	// resolveInstanceMethod调用:当调用了没有实现的方法没有实现就会调用resolveInstanceMethod
+	// resolveInstanceMethod作用:就知道哪些方法没有实现,从而动态添加方法
+	// sel:没有实现方法
+	+ (BOOL)resolveInstanceMethod:(SEL)sel
+	{
+	    if (sel == @selector(say:)) {
+	        
+	        // 动态添加方法
+	        /*
+	         cls:给哪个类添加方法
+	         SEL:添加方法的方法编号是什么
+	         IMP:方法实现,函数入口,函数名
+	         types:方法类型（document中搜runtime找到runtime functions-> 
+	                message forwardings -> types encoding里面规定好了 v代表void @代表对象 :代表SEL等等）
+	         */
+	        class_addMethod([self class], sel, (IMP)say, "v@:@");
+	        
+	        return YES;
+	    }
+	    return [super resolveInstanceMethod:sel];
+	}
+	
+	// 处理类方法的调用
+	+ (BOOL)resolveClassMethod:(SEL)sel
+	{
+	    if (sel == @selector(say:)) {
+	        
+	        // 给类添加方法
+	        // 需要添加到metaClass上
+	        // 解释blog：http://chun.tips/blog/2014/11/05/bao-gen-wen-di-objective[nil]c-runtime-(2)[nil]-object-and-class-and-meta-class/
+	        class_addMethod( objc_getMetaClass(class_getName(self)), sel, (IMP)say, "v@:@");
+	        return YES;
+	    }
+	    
+	    return [super resolveClassMethod:sel];
+	}
+	```
+	
 	
