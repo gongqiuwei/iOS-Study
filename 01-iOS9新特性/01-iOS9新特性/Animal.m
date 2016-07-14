@@ -9,5 +9,8 @@
 #import "Animal.h"
 
 @implementation Animal
-
++ (__kindof Animal *)animal
+{
+    return [[self alloc] init];
+}
 @end
