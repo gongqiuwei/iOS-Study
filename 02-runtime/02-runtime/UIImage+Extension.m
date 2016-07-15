@@ -12,6 +12,54 @@
 @implementation UIImage (Extension)
 
 // 分类的load方法和原来的类UIImage的方法不是同一个
+/*
+ 大神推荐的方法交换的做法 Method Swizzling
+ http://southpeak.github.io/blog/2014/11/06/objective-c-runtime-yun-xing-shi-zhi-si-:method-swizzling/
+ */
+
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+//        Class class = [self class];
+        Class class = object_getClass((id)self);
+        
+        SEL originalSel = @selector(imageNamed:);
+        SEL swizzledSel = @selector(gw_imageNamed:);
+        
+        // 注册一个方法（Method），它的SEL是originalSel, 实现方式是swizzledSel的IMP
+//        Method originalM = class_getClassMethod(class, originalSel);
+//        Method swizzleM = class_getClassMethod(class, swizzledSel);
+        Method originalM = class_getInstanceMethod(class, originalSel);
+        Method swizzleM = class_getInstanceMethod(class, swizzledSel);
+        
+        
+        /*
+         * @note class_addMethod will add an override of a superclass's implementation,
+         *  but will not replace an existing implementation in this class.
+         *  To change an existing implementation, use method_setImplementation.
+         
+         对于当前类已经实现了的方法，class_addMethod是不会成功的，如果当前类没有实现该方法，那么class_addMethod会增加实现IMP
+         
+         */
+        BOOL didAddMethod = class_addMethod(class, originalSel, method_getImplementation(swizzleM), method_getTypeEncoding(swizzleM));
+        
+        if (didAddMethod) {
+            
+            // 替换实现方式
+            // 将swizzledSel的实现方式(IMP)替换成originalSel的IMP
+            // 这样 originalSel的IMP是swizzledsel的IMP
+            // swizzledsel的IMP是 originalSel原来的IMP，实现了方法交换
+            class_replaceMethod(class, swizzledSel, method_getImplementation(originalM), method_getTypeEncoding(originalM));
+        } else {
+            method_exchangeImplementations(originalM, swizzleM);
+        }
+    });
+}
+
+
+/*
 + (void)load
 {
 //    NSLog(@"%s", __func__);
@@ -23,6 +71,8 @@
     Method extensionMethod = class_getClassMethod([UIImage class], @selector(gw_imageNamed:));
     method_exchangeImplementations(sysMethod, extensionMethod);
 }
+ */
+
 
 + (__kindof UIImage *)gw_imageNamed:(NSString *)imageName
 {

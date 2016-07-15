@@ -20,6 +20,11 @@
 		518D05721D375CC70079DC94 /* UIImage+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 518D05711D375CC70079DC94 /* UIImage+Extension.m */; };
 		518D05751D37633C0079DC94 /* Snip20151013_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 518D05731D37633C0079DC94 /* Snip20151013_2.png */; };
 		518D05761D37633C0079DC94 /* Snip20151013_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 518D05741D37633C0079DC94 /* Snip20151013_3.png */; };
+		518D05791D379B370079DC94 /* NSObject+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 518D05781D379B370079DC94 /* NSObject+Extension.m */; };
+		518D057B1D38BD150079DC94 /* status.plist in Resources */ = {isa = PBXBuildFile; fileRef = 518D057A1D38BD150079DC94 /* status.plist */; };
+		518D057E1D38BD3A0079DC94 /* Status.m in Sources */ = {isa = PBXBuildFile; fileRef = 518D057D1D38BD3A0079DC94 /* Status.m */; };
+		518D05811D38BD990079DC94 /* NSObject+Model.m in Sources */ = {isa = PBXBuildFile; fileRef = 518D05801D38BD990079DC94 /* NSObject+Model.m */; };
+		518D05841D38C5310079DC94 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 518D05831D38C5310079DC94 /* User.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +47,15 @@
 		518D05711D375CC70079DC94 /* UIImage+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Extension.m"; sourceTree = "<group>"; };
 		518D05731D37633C0079DC94 /* Snip20151013_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Snip20151013_2.png; sourceTree = "<group>"; };
 		518D05741D37633C0079DC94 /* Snip20151013_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Snip20151013_3.png; sourceTree = "<group>"; };
+		518D05771D379B370079DC94 /* NSObject+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Extension.h"; sourceTree = "<group>"; };
+		518D05781D379B370079DC94 /* NSObject+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Extension.m"; sourceTree = "<group>"; };
+		518D057A1D38BD150079DC94 /* status.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = status.plist; sourceTree = "<group>"; };
+		518D057C1D38BD3A0079DC94 /* Status.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Status.h; path = ../Status.h; sourceTree = "<group>"; };
+		518D057D1D38BD3A0079DC94 /* Status.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Status.m; path = ../Status.m; sourceTree = "<group>"; };
+		518D057F1D38BD990079DC94 /* NSObject+Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Model.h"; sourceTree = "<group>"; };
+		518D05801D38BD990079DC94 /* NSObject+Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Model.m"; sourceTree = "<group>"; };
+		518D05821D38C5310079DC94 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		518D05831D38C5310079DC94 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +95,14 @@
 				518D05661D3727670079DC94 /* Person.m */,
 				518D05701D375CC70079DC94 /* UIImage+Extension.h */,
 				518D05711D375CC70079DC94 /* UIImage+Extension.m */,
+				518D05771D379B370079DC94 /* NSObject+Extension.h */,
+				518D05781D379B370079DC94 /* NSObject+Extension.m */,
+				518D057C1D38BD3A0079DC94 /* Status.h */,
+				518D057D1D38BD3A0079DC94 /* Status.m */,
+				518D05821D38C5310079DC94 /* User.h */,
+				518D05831D38C5310079DC94 /* User.m */,
+				518D057F1D38BD990079DC94 /* NSObject+Model.h */,
+				518D05801D38BD990079DC94 /* NSObject+Model.m */,
 				518D054E1D3727470079DC94 /* Supporting Files */,
 			);
 			path = "02-runtime";
@@ -89,6 +111,7 @@
 		518D054E1D3727470079DC94 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				518D057A1D38BD150079DC94 /* status.plist */,
 				518D056E1D373E220079DC94 /* 1413628797629491.png */,
 				518D05731D37633C0079DC94 /* Snip20151013_2.png */,
 				518D05741D37633C0079DC94 /* Snip20151013_3.png */,
@@ -163,6 +186,7 @@
 			files = (
 				518D055E1D3727470079DC94 /* LaunchScreen.storyboard in Resources */,
 				518D055B1D3727470079DC94 /* Assets.xcassets in Resources */,
+				518D057B1D38BD150079DC94 /* status.plist in Resources */,
 				518D05761D37633C0079DC94 /* Snip20151013_3.png in Resources */,
 				518D05591D3727470079DC94 /* Main.storyboard in Resources */,
 				518D05751D37633C0079DC94 /* Snip20151013_2.png in Resources */,
@@ -178,12 +202,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				518D05841D38C5310079DC94 /* User.m in Sources */,
 				518D05561D3727470079DC94 /* ViewController.m in Sources */,
 				518D05531D3727470079DC94 /* AppDelegate.m in Sources */,
 				518D05671D3727670079DC94 /* Person.m in Sources */,
 				518D05721D375CC70079DC94 /* UIImage+Extension.m in Sources */,
 				518D05501D3727470079DC94 /* main.m in Sources */,
+				518D05791D379B370079DC94 /* NSObject+Extension.m in Sources */,
+				518D05811D38BD990079DC94 /* NSObject+Model.m in Sources */,
 				518D056B1D372E340079DC94 /* runtime笔记.md in Sources */,
+				518D057E1D38BD3A0079DC94 /* Status.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

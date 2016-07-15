@@ -8,7 +8,10 @@
 
 #import "ViewController.h"
 #import "Person.h"
-
+#import "NSObject+Extension.h"
+#import "NSObject+Model.h"
+#import "Status.h"
+#import "User.h"
 #import <objc/message.h>
 
 // 使用runtime
@@ -24,13 +27,44 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // 执行为定义的对象方法
-    [[Person alloc] performSelector:@selector(say:) withObject:@"hello"];
+    NSArray *dictArr = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"status.plist" ofType:nil]][@"statuses"];
     
-    [Person say:@"1111"];
+    NSMutableArray *statuses = [NSMutableArray array];
+    for (NSDictionary *dict in dictArr) {
+        
+        // KVC字典转模型
+//        Status *status = [Status statusWithDict:dict];
+        
+        // runtime字典转模型 一级转换
+//        Status *status = [Status createObjectWithDict:dict];
+        
+        // runtime字典转模型 二级转换
+        Status *status = [Status objectWithDict:dict];
+        
+        NSLog(@"%@", status.user.profile_image_url);
+        [statuses addObject:status];
+    }
+    
+//    NSLog(@"%@", statuses);
+}
+
+// 4、动态添加属性
+- (void)testAddProperty
+{
+    NSObject *obj = [[NSObject alloc] init];
+    obj.name = @"123";
+    NSLog(@"%@", obj.name);
 }
 
 // 3、动态添加方法
+- (void)testAddMethod
+{
+    // 执行为定义的对象方法
+    [[Person alloc] performSelector:@selector(say:) withObject:@"hello"];
+    
+    // 未定义的类方法
+    [Person say:@"1111"];
+}
 
 
 // 2、方法交换
